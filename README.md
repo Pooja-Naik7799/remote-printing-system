@@ -20,7 +20,7 @@ HTML | CSS | JavaScript | Firebase Auth | Firestore | Cloudinary | PDF.js | Char
 ## 📸 Screenshots
 
 ### 👤 User Dashboard
-![User Dashboard](screenshorts/User-dashboard.png)
+![User Dashboard](screenshorts/user-dashboard.png)
 
 ### 🛠️ Admin Dashboard
 ![Admin Dashboard](screenshorts/admin-dashboard.png)
@@ -67,7 +67,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 ```
 
-> ⚠️ Never commit your real credentials to GitHub.
+
 
 ---
 
