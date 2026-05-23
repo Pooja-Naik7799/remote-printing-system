@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration - RemotePrint</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body class="static-bg">
+
+<div class="login-container">
+    <div class="login-box">
+        <h2 id="title">User Registration</h2>
+        <p id="subtitle">Join the RemotePrint network</p>
+
+        <div id="registerForm">
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="regName" placeholder="Enter Full Name" required>
+            </div>
+            <div class="input-group">
+                <label>Mobile Number</label>
+                <input type="tel" id="phone" placeholder="10-digit mobile number" maxlength="10" required>
+            </div>
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" id="email" placeholder="email@example.com" required>
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Min 6 characters" required>
+            </div>
+
+            <button class="btn-primary-full" id="sendOtpBtn" onclick="sendOTP()">Send OTP</button>
+            <p id="otpMsg" class="otp-status-msg"></p>
+
+            <div id="otpSection" style="display:none; margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;">
+                <div class="input-group">
+                    <label>Enter 6-Digit OTP</label>
+                    <input type="text" id="otpInput" placeholder="Check your notification" maxlength="6">
+                </div>
+              <button type="button" id="verifyBtn" onclick="verifyAndRegister()" class="btn-primary-full">
+    <div class="btn-content">
+        <span id="btnText">Verify & Register</span>
+        <div id="loader" class="spinner"></div>
+    </div>
+</button>
+            </div>
+
+            <p class="switch-text">
+                Already have an account? <span onclick="showLogin()" style="cursor:pointer; color: #007bff;">Login</span>
+            </p>
+        </div>
+
+        <div id="loginForm" style="display:none">
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" placeholder="Enter Email">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="loginPass" placeholder="Enter Password">
+            </div>
+            <button class="btn-primary-full" onclick="loginUser()">Login</button>
+            <p class="switch-text">
+                New here? <span onclick="showRegister()" style="cursor:pointer; color: #007bff;">Create Account</span>
+            </p>
+        </div>
+        
+        <a href="role_selection.html" class="back-link">← Back to Roles</a>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script src="../js/firebase-config.js"></script>
+<script src="../js/user-auth.js"></script>
+
+<script>
+    // Simple toggle functions for Login/Register view
+    function showLogin() {
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('title').innerText = 'User Login';
+        document.getElementById('subtitle').innerText = 'Welcome back to RemotePrint';
+    }
+
+    function showRegister() {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+        document.getElementById('title').innerText = 'User Registration';
+        document.getElementById('subtitle').innerText = 'Join the RemotePrint network';
+    }
+</script>
+
+</body>
+</html>

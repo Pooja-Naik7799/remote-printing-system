@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="admin-page">
+
+    <div id="particles-js"></div>
+
+    <div class="admin-layout">
+
+        <!-- Sidebar -->
+        <div class="admin-sidebar">
+            <h2>🛠 Admin Panel</h2>
+            <ul>
+                <li>Dashboard</li>
+                <li>Orders</li>
+                <li>Users</li>
+                <li>Reports</li>
+                <li>Logout</li>
+                <button onclick="goToRoles()" class="btn-back">
+    Back
+</button>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-main">
+
+            <!-- Header -->
+            <div class="admin-header">
+                <div>
+                    <h1>Admin Dashboard</h1>
+                    <p>Manage and monitor all print orders</p>
+                </div>
+                <img src="../assets/images/printer.jpg" 
+                     alt="Printer" 
+                     class="admin-header-img">
+            </div>
+
+            <!-- Dashboard Cards -->
+            <div class="admin-cards">
+                <div class="admin-card-box">
+                    <h3>Total Orders</h3>
+                    <p id="totalOrders">0</p>
+                </div>
+
+                <div class="admin-card-box">
+                    <h3>Completed</h3>
+                    <p id="completedOrders">0</p>
+                </div>
+
+                <div class="admin-card-box">
+                    <h3>Pending</h3>
+                    <p id="pendingOrders">0</p>
+                </div>
+            </div>
+           <div class="analytics-wrapper">
+
+    <!-- PIE CHART -->
+    <div class="analytics-card">
+
+        <h2>Order Analytics</h2>
+
+        <div class="chart-box">
+            <canvas id="ordersChart"></canvas>
+        </div>
+
+    </div>
+
+
+    <!-- BAR CHART -->
+    <div class="analytics-card">
+
+        <h2>Revenue Analytics</h2>
+
+        <div class="chart-box">
+            <canvas id="revenueChart"></canvas>
+        </div>
+
+    </div>
+
+</div>
+            <!-- Table Section -->
+            <div class="admin-table-section">
+                <h2>Recent Orders</h2>
+
+                <table id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>User ID</th>
+                            <th>Token</th>
+                            <th>Print Type</th>
+                            <th>Copies</th>
+                            <th>Total Cost</th>
+                            <th>Status</th>
+                            <th>Update</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+ <!-- Firebase SDK (Compat Version) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script src="../js/firebase-config.js"></script>
+<script src="../js/admin.js"></script>
+
+
+<script src="../js/firebase-config.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="../js/admin.js"></script>
+</body>
+</html>

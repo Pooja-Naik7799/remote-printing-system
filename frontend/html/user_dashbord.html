@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - RemotePrint</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="dashboard-body">
+
+<nav class="navbar">
+    <div class="logo">Remote<span>Print</span></div>
+    <div class="user-profile">
+        <span id="userGreeting">Welcome, User</span>
+        <button onclick="logout()" class="btn-logout">Logout</button>
+        <button onclick="goToRoles()" class="btn-back">
+    Back
+</button>
+    </div>
+</nav>
+
+<div class="dashboard-wrapper">
+    <aside class="dashboard-sidebar">
+        <ul>
+            <li class="active"><i class="fas fa-upload"></i> New Print</li>
+            <li><i class="fas fa-store"></i> Select Print Shop</li>
+            <li><i class="fas fa-wallet"></i> Price</li>
+            <li><i class="fas fa-history"></i> My Requests</li>
+        </ul>
+    </aside>
+
+    <main class="dashboard-main">
+        <div class="header-card">
+            <h1>Upload Your Document</h1>
+            <p>Upload PDF and send to nearby print shop</p>
+        </div>
+
+        <div class="upload-container">
+            <div class="upload-box">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Select PDF File</h3>
+                <input type="file" id="fileInput" accept=".pdf" hidden>
+                <button onclick="document.getElementById('fileInput').click()" class="btn-primary">Select File</button>
+            </div>
+            <div id="fileInfo" style="display:none">
+                <p>Selected File: <span id="fileName"></span></p>
+            </div>
+        </div>
+
+        <div class="shop-section">
+            <h3>Select Nearby Print Shop</h3>
+            <select id="shopSelect">
+                <option value="">Choose Shop</option>
+                <option value="Campus Print Hub">Campus Print Hub</option>
+                <option value="Smart Xerox Center">Smart Xerox Center</option>
+                <option value="Fast Print Station">Fast Print Station</option>
+            </select>
+        </div>
+
+        <div class="price-section">
+            <h3>Print Options</h3>
+            <label>Number of Pages</label>
+            <input type="number" id="pages" readonly>
+            <label>Print Type</label>
+            <select id="printType">
+                <option value="2">Black & White (₹2/page)</option>
+                <option value="5">Color (₹5/page)</option>
+            </select>
+            <button onclick="calculatePrice()" class="btn-primary">Calculate Price</button>
+            <p id="priceResult"></p>
+        </div>
+       <!-- PAYMENT SECTION -->
+
+<div class="payment-section">
+
+    <h3>Payment</h3>
+
+    <p id="paymentAmount">
+        Total Amount: ₹0
+    </p>
+
+    <button onclick="makePayment()" class="btn-payment">
+        Pay Now
+    </button>
+
+    <p id="paymentStatusText">
+        Payment Pending
+    </p>
+
+</div>
+        <div class="confirm-section">
+            <button onclick="uploadFile()" class="btn-confirm">Send Print Request</button>
+        </div>
+ 
+        <div class="status-section">
+            <h3>Recent Activity</h3>
+            <table class="status-table">
+                <thead>
+                    <tr>
+                        <th>File</th>
+                        <th>Shop</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                    </tr>
+                </thead>
+                <tbody id="printStatusBody"></tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+<script src="../js/firebase-config.js"></script>
+<script src="../js/dashbord.js"></script>
+
+</body>
+</html>

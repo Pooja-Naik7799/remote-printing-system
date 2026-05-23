@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RemotePrint | Home</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div id="particles-js"></div>
+
+<header>
+    <nav>
+        <div class="logo">RemotePrint</div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-item">Home</a>
+            <button class="btn-logout">Logout</button>
+        </div>
+    </nav>
+</header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-text">
+                <h1>Remote Printing System</h1>
+                <p>Upload your documents online and print them securely at college kiosks without using pen drives.</p>
+                <div class="hero-btns">
+                    <a href="role_selection.html" class="btn-getstarted">Get Started</a>
+    <a href="role_selection.html" class="btn-create">Create Account</a> 
+                </div>
+            </div>
+            <div class="hero-img">
+                <img src="../assets/images/printer.jpg" alt="Printer">
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="card">
+                <i class="fas fa-bolt"></i>
+                <h3>Fast</h3>
+                <p>Quick upload and instant kiosk printing.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-lock"></i>
+                <h3>Secure</h3>
+                <p>Safe login and protected documents.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Cloud Storage</h3>
+                <p>Upload from anywhere, access securely.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Remote Printing System | Mini Project</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#ffffff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5, "random": false },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
+                "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true }
+            },
+            "retina_detect": true
+        });
+    </script>
+   
+</body>
+</html>

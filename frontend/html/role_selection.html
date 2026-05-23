@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Role - RemotePrint</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .role-container {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 14px;
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .role-options {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .role-card {
+            width: 250px;
+            padding: 30px 20px;
+            border-radius: 12px;
+            background: #f4f6fb;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .role-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .role-card i {
+            font-size: 40px;
+            color: #2a5298;
+            margin-bottom: 15px;
+        }
+
+        .btn-back {
+            margin-top: 30px;
+            padding: 10px 22px;
+            border: none;
+            border-radius: 25px;
+            background: #2a5298;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="role-container">
+        <h2>Welcome to RemotePrint</h2>
+        <p>Select your role to continue</p>
+
+        <div class="role-options">
+
+            <!-- USER -->
+            <div class="role-card" onclick="location.href='registration.html'">
+                <i class="fas fa-user"></i>
+                <h3>User</h3>
+                <p>Register & Print Documents</p>
+            </div>
+
+            <!-- ADMIN -->
+            <div class="role-card" onclick="location.href='admin_login.html'">
+                <i class="fas fa-user-shield"></i>
+                <h3>Admin</h3>
+               <span>Shop Owner / Manager</span>
+            </div>
+
+        </div>
+
+        <button class="btn-back" onclick="history.back()">Back to Home</button>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="../js/firebase-config.js"></script>
+
+    <!-- 🔥 FORCE LOGOUT WHEN ROLE PAGE LOADS -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            firebase.auth().signOut().catch(() => {});
+        });
+    </script>
+
+</body>
+</html>

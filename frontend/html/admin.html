@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>🛠 Admin Panel</h2>
+        <ul>
+            <li>Dashboard</li>
+            <li>Orders</li>
+            <li>Users</li>
+            <li>Reports</li>
+            <li>Logout</li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <div class="top-bar">
+            <h1>Admin Dashboard</h1>
+            <img src="../images/dashboard.png" class="top-image">
+        </div>
+
+        <!-- Cards Section -->
+        <div class="card-container">
+
+            <div class="card">
+                <img src="../images/orders.png">
+                <div>
+                    <h3>Total Orders</h3>
+                    <p>125</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="../images/users.png">
+                <div>
+                    <h3>Total Users</h3>
+                    <p>60</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="../images/revenue.png">
+                <div>
+                    <h3>Total Revenue</h3>
+                    <p>$4,200</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Orders Table -->
+        <div class="table-section">
+            <h2>Recent Orders</h2>
+
+            <table>
+                <tr>
+                    <th>Order ID</th>
+                    <th>User ID</th>
+                    <th>Print Type</th>
+                    <th>Copies</th>
+                    <th>Total Cost</th>
+                    <th>Status</th>
+                </tr>
+
+                <tr>
+                    <td>101</td>
+                    <td>U01</td>
+                    <td>Color</td>
+                    <td>10</td>
+                    <td>$20</td>
+                    <td class="pending">Pending</td>
+                </tr>
+
+                <tr>
+                    <td>102</td>
+                    <td>U02</td>
+                    <td>Black & White</td>
+                    <td>5</td>
+                    <td>$5</td>
+                    <td class="completed">Completed</td>
+                </tr>
+
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>

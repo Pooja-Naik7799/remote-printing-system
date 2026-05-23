@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - RemotePrint</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="static-bg">
+
+    <div class="login-container">
+        <div class="login-box">
+            <i class="fas fa-user-shield admin-icon"></i>
+            <h2>Admin Login</h2>
+            <p>Enter your credentials to access the panel</p>
+<form id="adminLoginForm">
+    <div class="input-group">
+        <label>Admin Email</label>
+        <input type="email" id="adminEmail" placeholder="admin@example.com" required>
+    </div>
+    <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="adminPassword" placeholder="Enter Password" required>
+    </div>
+    <button type="submit" class="btn-primary-full">Login to Dashboard</button>
+</form>
+           
+            
+            <a href="role_selection.html" class="back-link"><i class="fas fa-arrow-left"></i> Back</a>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script src="../js/firebase-config.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>
