@@ -20,19 +20,19 @@ HTML | CSS | JavaScript | Firebase Auth | Firestore | Cloudinary | PDF.js | Char
 ## 📸 Screenshots
 
 ### 👤 User Dashboard
-![User Dashboard](screenshorts/user-dashboard.png)
+![User Dashboard](screenshorts/User-dashbord.png)
 
 ### 🛠️ Admin Dashboard
-![Admin Dashboard](screenshorts/admin-dashboard.png)
+![Admin Dashboard](screenshorts/admin-dashbord.png)
 
 ### 📊 Analytics
 ![Analytics](screenshorts/Analytics.png)
 
 ### 🧾 Receipt Generation
-![Receipt](screenshots/recepit.png)
+![Receipt](screenshorts/recepit.png)
 
 ### 💳 Payment Section
-![Payment](screenshots/Payment.png)
+![Payment](screenshorts/Payment.png)
 
 
 ## ⚙️ Setup Instructions
