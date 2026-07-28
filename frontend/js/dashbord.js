@@ -400,7 +400,7 @@ if (!paymentDone) {
         // ================= CLOUDINARY UPLOAD =================
         const response = await fetch(
 
-            "https://api.cloudinary.com/v1_1/dky77tacp/auto/upload",
+            "https://api.cloudinary.com/v1_1/dky77tacp/raw/upload",
 
             {
                 method: "POST",
@@ -410,22 +410,17 @@ if (!paymentDone) {
         );
 
 
+const data = await response.json();
 
-        const data = await response.json();
+console.log("Cloudinary Response:", data);
 
+if (!response.ok) {
+    console.error(data);
+    alert(data.error.message);
+    throw new Error(data.error.message);
+}
 
-
-        if (!data.secure_url) {
-
-            console.error(data);
-
-            throw new Error("Cloudinary Upload Failed");
-
-        }
-
-
-
-        console.log("Cloudinary Success");
+console.log("Upload Success:", data);
 
 
 

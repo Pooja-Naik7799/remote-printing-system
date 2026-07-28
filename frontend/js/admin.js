@@ -117,6 +117,7 @@ function loadAdminDashboard() {
                         <td>${order.userId.substring(0,5)}...</td>
                         <td>${order.token}</td>
                         <td><a href="${order.fileUrl}" target="_blank">View PDF</a></td>
+                        
                         <td>${order.pages}</td>
                         <td>₹${order.price}</td>
                        <td>${order.status}</td>
