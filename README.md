@@ -47,7 +47,7 @@ HTML | CSS | JavaScript | Firebase Auth | Firestore | Cloudinary | PDF.js | Char
 ![User Dashboard](screenshorts/User-dashbord.png)
 
 ### 🛠️ Admin Dashboard
-![Admin Dashboard](screenshorts/admin-dashbord(1).png)
+![Admin Dashboard](screenshorts/admin.png)
 
 ### 📊 Analytics
 ![Analytics](screenshorts/Analytics.png)
