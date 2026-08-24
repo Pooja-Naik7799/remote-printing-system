@@ -100,27 +100,64 @@ function loadAdminDashboard() {
             let total = 0;
             let completed = 0;
             let pending = 0;
-              let totalRevenue = 0;
+            let totalRevenue = 0;
+
+            // Build ascending-order waiting list first, to assign live FCFS positions
+            const waitingOrders = [];
+            snapshot.forEach(doc => {
+                if (doc.data().status === "Waiting in Queue") {
+                    waitingOrders.push({ id: doc.id, ...doc.data() });
+                }
+            });
+            waitingOrders.sort((a, b) => {
+                const aTime = a.timestamp ? a.timestamp.toMillis() : 0;
+                const bTime = b.timestamp ? b.timestamp.toMillis() : 0;
+                return aTime - bTime; // oldest first
+            });
+            const positionMap = {};
+            waitingOrders.forEach((order, index) => {
+                positionMap[order.id] = index + 1;
+            });
+
             snapshot.forEach((doc) => {
-             
+
                 const order = doc.data();
                 const orderId = doc.id;
 
                 total++;
-                 totalRevenue += Number(order.price || 0);
+                totalRevenue += Number(order.price || 0);
                 if (order.status === "Printed") completed++;
                 else pending++;
+
+                const livePosition = positionMap[orderId]
+                    ? `#${positionMap[orderId]} in queue`
+                    : "—";
 
                 const row = `
                     <tr>
                         <td>${orderId.substring(0,5)}...</td>
                         <td>${order.userId.substring(0,5)}...</td>
                         <td>${order.token}</td>
-                        <td><a href="${order.fileUrl}" target="_blank">View PDF</a></td>
-                        
+                     <td>
+
+${order.fileUrl ?
+
+`<a href="javascript:void(0)" onclick="viewPdf('${order.fileUrl}', '${order.token}')">
+View PDF
+</a>`
+
+:
+
+`<span style="color:red;font-weight:bold;">
+Printed
+</span>`
+
+}
+
+</td>
                         <td>${order.pages}</td>
                         <td>₹${order.price}</td>
-                       <td>${order.status}</td>
+                       <td>${order.status}<br><small>${livePosition}</small></td>
 
                 <td>
           ${
@@ -145,6 +182,11 @@ function loadAdminDashboard() {
             document.getElementById("totalOrders").innerText = total;
             document.getElementById("completedOrders").innerText = completed;
             document.getElementById("pendingOrders").innerText = pending;
+
+            // NEW: live count of people actually waiting right now
+            const queueCountEl = document.getElementById("queueCount");
+            if (queueCountEl) queueCountEl.innerText = waitingOrders.length;
+
             updateChart(completed, pending);
             updateRevenueChart(totalRevenue);
 
@@ -156,7 +198,7 @@ function loadAdminDashboard() {
 
 
 // ================= UPDATE STATUS =================
-window.updateOrderStatus = function(id, newStatus) {
+/*window.updateOrderStatus = function(id, newStatus) {
 
     firebase.firestore()
         .collection("printRequests")
@@ -170,6 +212,36 @@ window.updateOrderStatus = function(id, newStatus) {
         .catch((error) => {
             alert("Update failed: " + error.message);
         });
+};*/
+window.updateOrderStatus = function(id, newStatus) {
+
+    firebase.firestore()
+        .collection("printRequests")
+        .doc(id)
+        .update({
+
+            status: newStatus,
+
+            fileUrl: "",
+
+            fileDeleted: true,
+
+            printedAt: firebase.firestore.FieldValue.serverTimestamp()
+
+        })
+
+        .then(() => {
+
+            console.log("Updated successfully");
+
+        })
+
+        .catch((error) => {
+
+            alert("Update failed: " + error.message);
+
+        });
+
 };
 
 
@@ -246,4 +318,100 @@ window.goToRoles = function () {
 
     window.location.href = "role_selection.html";
 
+};
+// ================= PDF VIEWER MODAL =================
+function injectPdfModal() {
+    if (document.getElementById("pdfViewerModal")) return; // already injected
+
+    const modal = document.createElement("div");
+    modal.id = "pdfViewerModal";
+    modal.style.cssText = `
+        display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+        background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;
+    `;
+
+    modal.innerHTML = `
+        <div style="background:#0f1f3d; width:90%; max-width:900px; height:85%; border-radius:10px; display:flex; flex-direction:column; overflow:hidden;">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:#1a2f5c;">
+                <span id="pdfViewerTitle" style="color:white; font-weight:bold;">PDF Preview</span>
+                <div>
+                    <button id="pdfPrintBtn" style="padding:6px 14px; margin-right:8px; background:#2563eb; color:white; border:none; border-radius:4px; cursor:pointer;">🖨 Print</button>
+                    <button id="pdfDownloadBtn" style="padding:6px 14px; margin-right:8px; background:green; color:white; border:none; border-radius:4px; cursor:pointer;">⬇ Download</button>
+                    <button id="pdfCloseBtn" style="padding:6px 14px; background:#dc2626; color:white; border:none; border-radius:4px; cursor:pointer;">✕ Close</button>
+                </div>
+            </div>
+            <iframe id="pdfViewerFrame" style="flex:1; width:100%; border:none; background:white;"></iframe>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    document.getElementById("pdfCloseBtn").onclick = () => {
+        modal.style.display = "none";
+        document.getElementById("pdfViewerFrame").src = ""; // stop loading
+    };
+}
+
+window.viewPdf = async function (url, token) {
+    injectPdfModal();
+
+    const modal = document.getElementById("pdfViewerModal");
+    const frame = document.getElementById("pdfViewerFrame");
+    const title = document.getElementById("pdfViewerTitle");
+
+    title.innerText = `Order ${token} - PDF Preview`;
+    modal.style.display = "flex";
+    frame.src = ""; // clear previous
+
+    let blobUrl = null;
+
+    try {
+        const res = await fetch(url);
+
+        if (!res.ok) {
+            throw new Error(`Fetch failed: ${res.status}`);
+        }
+
+        const arrayBuffer = await res.arrayBuffer();
+
+        // Force the correct MIME type — Cloudinary raw uploads
+        // often come back as application/octet-stream, which the
+        // browser's PDF viewer refuses to render
+        const blob = new Blob([arrayBuffer], { type: "application/pdf" });
+
+        blobUrl = URL.createObjectURL(blob);
+        frame.src = blobUrl;
+
+    } catch (e) {
+        console.error("PDF fetch failed:", e);
+        alert("Couldn't load preview, opening in new tab instead.");
+        window.open(url, "_blank");
+        modal.style.display = "none";
+        return;
+    }
+
+    // Print button
+    document.getElementById("pdfPrintBtn").onclick = () => {
+        try {
+            frame.contentWindow.focus();
+            frame.contentWindow.print();
+        } catch (e) {
+            window.open(blobUrl || url, "_blank");
+        }
+    };
+
+    // Download button
+    document.getElementById("pdfDownloadBtn").onclick = () => {
+        const link = document.createElement("a");
+        link.href = blobUrl || url;
+        link.download = `Order_${token}.pdf`;
+        link.click();
+    };
+
+    // Clean up blob when modal closes
+    document.getElementById("pdfCloseBtn").onclick = () => {
+        modal.style.display = "none";
+        frame.src = "";
+        if (blobUrl) URL.revokeObjectURL(blobUrl);
+    };
 };

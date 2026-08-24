@@ -398,16 +398,13 @@ if (!paymentDone) {
 
 
         // ================= CLOUDINARY UPLOAD =================
-        const response = await fetch(
-
-            "https://api.cloudinary.com/v1_1/dky77tacp/raw/upload",
-
-            {
-                method: "POST",
-                body: formData
-            }
-
-        );
+ const response = await fetch(
+    "https://api.cloudinary.com/v1_1/bns3vke0/raw/upload",
+    {
+        method: "POST",
+        body: formData
+    }
+);
 
 
 const data = await response.json();
@@ -426,30 +423,49 @@ console.log("Upload Success:", data);
 
         // ================= QUEUE TOKEN SYSTEM =================
 
-   const snapshot = await firebase.firestore()
+ // ================= QUEUE TOKEN SYSTEM (Global FCFS, atomic) =================
+
+// Atomic counter so two simultaneous uploads never get the same token,
+// even if they hit "Send" at the exact same moment
+const counterRef = firebase.firestore().collection("counters").doc("queueCounter");
+
+const queueNumber = await firebase.firestore().runTransaction(async (transaction) => {
+    const counterDoc = await transaction.get(counterRef);
+    const current = counterDoc.exists ? counterDoc.data().value : 0;
+    const next = current + 1;
+    transaction.set(counterRef, { value: next });
+    return next;
+});
+
+const token =
+    "RP" +
+    String(queueNumber).padStart(3, "0");
+
+// Estimated wait = sum of pages of everyone currently waiting ahead of you
+// (FCFS by timestamp) + your own pages, at a fixed rate per page
+const TIME_PER_PAGE_MIN = 0.5; // adjust based on your actual printer speed
+
+const waitingSnapshot = await firebase.firestore()
     .collection("printRequests")
-    .where("userId", "==", user.uid)
+    .where("status", "==", "Waiting in Queue")
+    .orderBy("timestamp", "asc")
     .get();
 
-const queueNumber = snapshot.size + 1;
+let pagesAhead = 0;
+waitingSnapshot.forEach(doc => {
+    pagesAhead += Number(doc.data().pages || 0);
+});
 
+const queuePosition = waitingSnapshot.size + 1; // your position in line right now
 
-
-        const token =
-            "RP" +
-            String(queueNumber).padStart(3, "0");
-
-
-
-        const estimatedTime =
-            queueNumber * 2;
+const estimatedTime = Math.ceil((pagesAhead + parseInt(pages)) * TIME_PER_PAGE_MIN);
 
 
 
         // ================= SAVE TO FIRESTORE =================
-        await firebase.firestore()
-            .collection("printRequests")
-            .add({
+     await firebase.firestore()
+    .collection("printRequests")
+    .add({
 
     userId: user.uid,
     fileName: selectedFile.name,
@@ -458,13 +474,14 @@ const queueNumber = snapshot.size + 1;
     pages: parseInt(pages),
     price: price,
     token: token,
+    queuePosition: queuePosition,      // ← add this
     estimatedTime: estimatedTime,
 
     paymentStatus: "Paid",
     status: "Waiting in Queue",
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
 
-            });
+    });
 
 
 
@@ -507,112 +524,86 @@ generateReceipt(
 
 
 // ================= LOAD RECENT ACTIVITY =================
+
 function loadRecentActivity(uid) {
 
     firebase.firestore()
-
         .collection("printRequests")
-
         .where("userId", "==", uid)
-
         .orderBy("timestamp", "desc")
-
         .onSnapshot((snapshot) => {
 
-            const tbody =
-                document.getElementById("printStatusBody");
+            // Pull the GLOBAL waiting queue (not just this user's orders)
+            // so we can calculate live position across everyone
+            firebase.firestore()
+                .collection("printRequests")
+                .where("status", "==", "Waiting in Queue")
+                .orderBy("timestamp", "asc")
+                .get()
+                .then((waitingSnapshot) => {
 
-            tbody.innerHTML = "";
+                    const positionMap = {};
+                    waitingSnapshot.docs.forEach((doc, index) => {
+                        positionMap[doc.id] = index + 1;
+                    });
 
+                    const tbody = document.getElementById("printStatusBody");
+                    tbody.innerHTML = "";
 
+                    snapshot.forEach(doc => {
 
-            snapshot.forEach(doc => {
+                        const data = doc.data();
 
-                const data = doc.data();
+                        if (data.status === "Printed" && !sessionStorage.getItem(doc.id)) {
+                            showNotification(`✅ Your order "${data.fileName}" is ready for pickup`);
+                            sessionStorage.setItem(doc.id, "shown");
+                        }
 
+                        // NEW: detect if THIS order's queue position improved
+                        // since the last snapshot, and notify the user
+                        const livePosition = positionMap[doc.id];
+                        const prevPosition = sessionStorage.getItem("pos_" + doc.id);
 
+                        if (livePosition && prevPosition && Number(prevPosition) > livePosition) {
+                            showNotification(`⬆ You moved up! Now #${livePosition} in queue for token ${data.token}`);
+                        }
+                        if (livePosition) {
+                            sessionStorage.setItem("pos_" + doc.id, livePosition);
+                        }
 
-                // ================= NOTIFICATION =================
-                if (
+                        const queueText = data.status === "Waiting in Queue"
+                            ? (livePosition ? `🔢 #${livePosition} in queue` : "")
+                            : "";
 
-                    data.status === "Printed" &&
+                        const row = `
+                        <tr>
+                         <td>
+                        ${
+                            data.fileDeleted
+                            ? `${data.fileName}`
+                            : `<a href="${data.fileUrl}" target="_blank">${data.fileName}</a>`
+                        }
+                        </td>
+                        <td>
+                            ${data.shop}<br>
+                            <small>🎟 ${data.token || "N/A"}</small><br>
+                            <small>⏱ ${data.estimatedTime || 0} mins</small><br>
+                            <small>${queueText}</small>
+                        </td>
+                        <td><span class="badge">${data.status}</span></td>
+                        <td>
+                            <span class="${data.paymentStatus === "Paid" ? "paid-badge" : "pending-badge"}">
+                                ${data.paymentStatus || "Pending"}
+                            </span>
+                        </td>
+                        </tr>
+                        `;
 
-                    !sessionStorage.getItem(doc.id)
-
-                ) {
-
-                    showNotification(
-
-                        `✅ Your order "${data.fileName}" is ready for pickup`
-
-                    );
-
-
-
-                    sessionStorage.setItem(
-                        doc.id,
-                        "shown"
-                    );
-
-                }
-
-
-
-                // ================= TABLE ROW =================
-    const row = `
-
-<tr>
-
-    <td>
-        <a href="${data.fileUrl}" target="_blank">
-            ${data.fileName}
-        </a>
-    </td>
-
-    <td>
-        ${data.shop}<br>
-
-        <small>
-            🎟 ${data.token || "N/A"}
-        </small><br>
-
-        <small>
-            ⏱ ${data.estimatedTime || 0} mins
-        </small>
-    </td>
-
-    <td>
-        <span class="badge">
-            ${data.status}
-        </span>
-    </td>
-
-    <td>
-        <span class="${
-            data.paymentStatus === "Paid"
-            ? "paid-badge"
-            : "pending-badge"
-        }">
-
-            ${data.paymentStatus || "Pending"}
-
-        </span>
-    </td>
-
-</tr>
-
-`;
-
-
-
-                tbody.innerHTML += row;
-
-            });
-
+                        tbody.innerHTML += row;
+                    });
+                });
         });
-
 }
-
 
 
 // ================= POPUP NOTIFICATION =================
