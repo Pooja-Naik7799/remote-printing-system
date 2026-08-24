@@ -5,14 +5,38 @@ upload documents, make payments, track print status, and collect printed
 documents from nearby print shops.
 
 ## 🚀 Features
-- User Authentication (Firebase)
-- PDF Upload & Page Detection (PDF.js)
-- Dynamic Price Calculation
-- Queue Management with Token Generation
-- Real-Time Status Updates (Firestore)
-- Admin Dashboard with Analytics (Chart.js)
+
+- User Authentication using Firebase
+- PDF Upload and Page Detection using PDF.js
+- Dynamic Price Calculation based on page count
+- Queue Management with Unique Token Generation
+- Live Queue Position Tracking for Users
+- Real-Time Print Status Updates using Firestore
+- Admin Dashboard for Managing Print Requests
+- Admin PDF Preview with Print and Download Options
+- PDF Preview Modal with Print, Download, and Close Controls
+- Admin Dashboard Analytics using Chart.js
 - Cloudinary File Storage
 - Payment Simulation
+- Receipt Generation after Print Request
+## 🖨️ Admin Print Workflow
+
+1. Admin views incoming print requests from the Admin Dashboard.
+2. Admin clicks the **View PDF / Print** option.
+3. The uploaded PDF opens in a secure preview window.
+4. Admin can preview all pages before printing.
+5. Admin can choose **Print** to send the document for printing.
+6. Admin can choose **Download** to download the PDF when required.
+7. After successful printing, the admin marks the request as **Printed**.
+8. The user's print status is updated in real time.
+
+## ⏳ Queue Management
+
+- Every print request is assigned a unique print token.
+- Print requests are organized based on their queue order.
+- Users can view their current queue position, such as `#7 in queue`.
+- Queue positions update as earlier print requests are completed.
+- Printed requests are removed from the active queue.
 
 ## 🛠️ Tech Stack
 HTML | CSS | JavaScript | Firebase Auth | Firestore | Cloudinary | PDF.js | Chart.js
