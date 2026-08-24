@@ -47,7 +47,7 @@ HTML | CSS | JavaScript | Firebase Auth | Firestore | Cloudinary | PDF.js | Char
 ![User Dashboard](screenshorts/User-dashbord.png)
 
 ### 🛠️ Admin Dashboard
-![Admin Dashboard](screenshorts/admin-dashbord.png)
+![Admin Dashboard](screenshorts/admin-dashboard.png)
 
 ### 📊 Analytics
 ![Analytics](screenshorts/Analytics.png)
@@ -58,7 +58,9 @@ HTML | CSS | JavaScript | Firebase Auth | Firestore | Cloudinary | PDF.js | Char
 ### 💳 Payment Section
 ![Payment](screenshorts/Payment.png)
 
+### 🖨️ Admin PDF Preview
 
+![Admin PDF Preview](screenshorts/admin-pdf-preview.png)
 ## ⚙️ Setup Instructions
 
 ### 1️⃣ Clone the Repository
